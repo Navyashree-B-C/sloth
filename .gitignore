@@ -6,9 +6,12 @@ __pycache__/
 # SQLite database file
 *.db
 
-# Vercel output, Node modules (if any)
-node_modules/
+# Vercel (local config only, do not commit)
+vercel.json
 .vercel/
+
+# Node modules
+node_modules/
 
 # Python environment
 .env
@@ -25,6 +28,12 @@ venv/
 # Coqui TTS model cache
 backend/.tts_cache/
 backend/.mpl/
+
+# Internal backlog (local only)
+SLOTH 🖤.md
+
+# Local Git setup notes (do not commit)
+docs/GIT_SETUP.md
 
 # OS generated files
 .DS_Store
