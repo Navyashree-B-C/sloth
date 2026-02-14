@@ -1,7 +1,6 @@
 
-📘 README
 
-### SLOTH
+# SLOTH
 
 SLOTH is a **hybrid wake-up authority system** built to eliminate snoozing, avoidance, and morning drift.
 
@@ -43,12 +42,9 @@ From this point, SLOTH is in control.
 ## 🔥 Core Capabilities
 
 * Voice-based wake-up (not sounds)
-* Personality-driven messaging (witty, sarcastic, caring)
+* Personality-driven messaging (witty, sarcastic)
 * Escalation if the user delays or fails
 * Interaction lock (keywords required)
-* Camera-based proof of wakefulness
-* Guided morning task flow
-* Behavior memory and adaptation
 
 ---
 
@@ -74,8 +70,7 @@ From this point, SLOTH is in control.
 ### Voice
 
 * Coqui XTTS (free, local, expressive)
-* Default: Baldur Sanjin (deep, character-like male)
-* Tune: `SLOTH_TTS_SPEAKER` env var. Options: `Baldur Sanjin`, `Damien Black`, `Wulf Carlevaro`, `Torcull Diarmuid`
+* Tune: `SLOTH_TTS_SPEAKER` env var. 
 
 ### Android Automation (Tasker)
 
@@ -89,7 +84,7 @@ From this point, SLOTH is in control.
 
 **Simulate on desktop**: Open  
 `http://localhost:5173/?autostart=1&alarm_time=07:30`  
-to start a session without an alarm.
+to start a session without an alarm. Add `&delay_sec=0` to skip the countdown.
 
 ---
 
@@ -97,21 +92,14 @@ to start a session without an alarm.
 
 ```
 sloth/
-│
 ├── backend/
 │   ├── app/
-│   │   ├── main.py
-│   │   ├── api/
-│   │   ├── core/
-│   │   │   ├── scheduler.py
-│   │   │   ├── personality.py
-│   │   │   ├── escalation.py
-│   │   ├── services/
-│   │   │   ├── tts.py
-│   │   │   ├── message_builder.py
-│   │   ├── models/
+│   │   ├── main.py           # Session start, validate, nudge, proof, routine/next, transcribe
+│   │   ├── core/             # constants, db, personality, session_store
+│   │   ├── models/           # session.py (Pydantic)
+│   │   └── services/         # message_builder, stt, tts
+│   ├── tests/
 │   └── requirements.txt
-│
 ├── frontend/
 │   ├── package.json
 │   ├── vite.config.mts
@@ -120,7 +108,8 @@ sloth/
 │       ├── App.jsx
 │       ├── main.jsx
 │       └── styles.css
-│
+├── docs/                     # PROJECT.md
+|
 └── README.md
 ```
 
