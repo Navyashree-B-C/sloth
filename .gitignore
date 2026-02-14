@@ -1,0 +1,31 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# SQLite database file
+*.db
+
+# Vercel output, Node modules (if any)
+node_modules/
+.vercel/
+
+# Python environment
+.env
+venv/
+.venv/
+.env.*
+
+# Logs
+*.log
+
+# Cursor (rules, cache, build – local only, do not commit)
+.cursor/
+
+# Coqui TTS model cache
+backend/.tts_cache/
+backend/.mpl/
+
+# OS generated files
+.DS_Store
+Thumbs.db
