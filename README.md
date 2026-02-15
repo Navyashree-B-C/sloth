@@ -46,6 +46,8 @@ From this point, SLOTH is in control.
 * Escalation if the user delays or fails
 * Interaction lock (keywords required)
 
+**See the app:** [https://sloth.vercel.app](https://sloth.vercel.app)
+
 ---
 
 ## 🧩 Tech Stack
@@ -56,7 +58,6 @@ From this point, SLOTH is in control.
 * Web Audio API
 * Web Camera API
 * PWA-style fullscreen experience
-* Hosted on **Vercel**
 
 ### Backend (Brain)
 
@@ -65,7 +66,6 @@ From this point, SLOTH is in control.
 * Pydantic
 * APScheduler (session logic)
 * SQLite (upgradeable)
-* Hosted on **Render**
 
 ### Voice
 
@@ -78,8 +78,8 @@ From this point, SLOTH is in control.
 * **Task**:
   1. Wi-Fi → On (if needed).
   2. Launch App / Browser → open URL:  
-     `https://your-sloth-url.vercel.app/?autostart=1&alarm_time=HH:mm`  
-     (Replace with your deployed frontend URL and desired time, e.g. `07:30`.)
+`https://sloth.vercel.app/?autostart=1&alarm_time=HH:mm`
+     (Replace `HH:mm` with your desired time, e.g. `07:30`.)
   3. Keep screen on: use Tasker’s “Stay On” or a custom scene that holds wake lock until SLOTH releases.
 
 **Simulate on desktop**: Open  

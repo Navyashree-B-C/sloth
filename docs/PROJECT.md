@@ -207,8 +207,8 @@ Then say/type the keyword twice (first → COMPLIANT, second → RELEASE).
 
 ## 9. Disabled / Future Features
 
-- **Camera proof (EPIC 5):** Backend supports `proof_captured` and `POST /session/proof`; frontend has camera UI code but it is not shown in the current flow. To re-enable: restore the validate logic that requires proof before release and show camera when COMPLIANT.
-- **Morning routine (EPIC 6):** Backend supports ROUTINE_ACTIVE and `POST /session/routine/next`; frontend has routine UI but it is not shown. To re-enable: restore the validate path COMPLIANT → ROUTINE_ACTIVE → (routine steps) → RELEASE and show “Next step” / “Routine complete” in the UI.
+- **Camera proof :** Backend supports `proof_captured` and `POST /session/proof`; frontend has camera UI code but it is not shown in the current flow. To re-enable: restore the validate logic that requires proof before release and show camera when COMPLIANT.
+- **Morning routine :** Backend supports ROUTINE_ACTIVE and `POST /session/routine/next`; frontend has routine UI but it is not shown. To re-enable: restore the validate path COMPLIANT → ROUTINE_ACTIVE → (routine steps) → RELEASE and show “Next step” / “Routine complete” in the UI.
 
 ---
 

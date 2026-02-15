@@ -1,5 +1,5 @@
 # SLOTH CI: backend tests + frontend build on push and pull_request.
-# CD: frontend → Vercel, backend → Render (configure in those platforms).
+# CD: frontend → Vercel, backend → Railway (configure in those platforms).
 
 name: CI
 
