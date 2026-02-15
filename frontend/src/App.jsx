@@ -39,8 +39,12 @@ function App() {
   const [routineComplete, setRoutineComplete] = useState(false);
   /** True after backend said phrase was correct; show type step (yes/ok) only. */
   const [spokenVerified, setSpokenVerified] = useState(false);
+  /** True after first tap; required by browser before fullscreen and audio.play(). */
+  const [userHasGestured, setUserHasGestured] = useState(false);
 
   const autostartDone = useRef(false);
+  /** When play() is blocked (no user gesture), store URLs to play on first tap. */
+  const pendingAudioRef = useRef(null);
   const wakeLockRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const streamRef = useRef(null);
@@ -89,7 +93,11 @@ function App() {
       const promptUrl = data.prompt_audio_url
         ? new URL(data.prompt_audio_url, apiBase).toString()
         : null;
-      await playSequence(audioUrl, promptUrl);
+      try {
+        await playSequence(audioUrl, promptUrl);
+      } catch (_playErr) {
+        pendingAudioRef.current = { audioUrl, promptUrl };
+      }
       setSpeakNow(true);
       setShowKeywordInput(true);
       setSpokenVerified(false);
@@ -442,9 +450,9 @@ function App() {
     return () => clearTimeout(t);
   }, [delaySeconds, handleStart]);
 
-  // Escape prevention: fullscreen when session is active (after first message).
+  // Fullscreen only after user gesture (browser requirement).
   useEffect(() => {
-    if (!sessionId || released) return;
+    if (!sessionId || released || !userHasGestured) return;
     const doc = document.documentElement;
     if (doc.requestFullscreen) {
       doc.requestFullscreen().catch(() => {});
@@ -454,7 +462,7 @@ function App() {
         document.exitFullscreen().catch(() => {});
       }
     };
-  }, [sessionId, released]);
+  }, [sessionId, released, userHasGestured]);
 
   // Screen wake lock: keep screen on while session is active until release.
   useEffect(() => {
@@ -484,8 +492,26 @@ function App() {
     return () => window.removeEventListener("beforeunload", handler);
   }, [sessionId, released]);
 
+  // First tap unlocks fullscreen and plays any pending audio (browser requires user gesture).
+  const handleFirstTap = useCallback(
+    (e) => {
+      if (userHasGestured || !sessionId || released) return;
+      e.preventDefault();
+      e.stopPropagation();
+      setUserHasGestured(true);
+      const doc = document.documentElement;
+      if (doc.requestFullscreen) doc.requestFullscreen().catch(() => {});
+      const pending = pendingAudioRef.current;
+      if (pending) {
+        pendingAudioRef.current = null;
+        playSequence(pending.audioUrl, pending.promptUrl).catch(() => {});
+      }
+    },
+    [sessionId, released, userHasGestured]
+  );
+
   return (
-    <main className="app">
+    <main className="app" onClick={handleFirstTap}>
       <section className="screen screen--center">
         <h1>SLOTH 🖤</h1>
         <p className="voice-text">
