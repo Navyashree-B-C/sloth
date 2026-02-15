@@ -1,121 +1,127 @@
-
-
 # SLOTH
 
-SLOTH is a **hybrid wake-up authority system** built to eliminate snoozing, avoidance, and morning drift.
+SLOTH is a wake-enforcement web system designed to eliminate snoozing and post-alarm drift through structured interaction.
 
-It combines the **reliability of Android OS alarms** with a **personality-driven web app** that takes control the moment you wake up.
+It activates during your wake window and maintains control until you complete a required confirmation flow.
 
-SLOTH does not rely on motivation.
-It enforces consistency.
-
----
-
-## 🧠 How SLOTH Works
-
-### Layer 1 — Wake Trigger (Android OS)
-
-* Uses the native Android alarm
-* Works even when:
-
-  * Bedtime mode is ON
-  * Wi-Fi is OFF
-  * Phone is locked
-
-This layer’s only job is to **wake you up**.
+No passive reminders.  
+No reliance on motivation.  
+Just enforced engagement.
 
 ---
 
-### Layer 2 — Wake Authority (SLOTH App)
+## 🧠 The Problem
 
-Once the alarm is dismissed:
+Most alarm systems succeed at one thing: making noise.
 
-* Tasker automation runs
-* Wi-Fi is enabled
-* SLOTH opens automatically
-* Voice starts immediately
+They fail at the critical window immediately after dismissal — when users drift back into bed, scroll, or stall.
 
-From this point, SLOTH is in control.
+Waking up isn't a willpower problem.
+
+It's a systems problem.
+
+SLOTH is built to occupy that vulnerable window and replace drift with structured action.
+
+---
+
+## ⚙️ How SLOTH Works
+
+1. Your wake time arrives.
+2. Android automation launches SLOTH in the browser.
+3. A short tap enables audio (browser requirement).
+4. Voice begins immediately.
+5. You must:
+   - Say the required phrase (e.g., "I'm awake" / "I'm up")
+   - Type the confirmation keyword (yes or ok)
+
+Until both confirmations are completed, the session remains active.
+
+This dual-input requirement (speech + typed confirmation) prevents passive dismissal.
 
 ---
 
 ## 🔥 Core Capabilities
 
-* Voice-based wake-up (not sounds)
-* Personality-driven messaging (witty, sarcastic)
-* Escalation if the user delays or fails
-* Interaction lock (keywords required)
-
-**See the app:** [https://sloth.vercel.app](https://sloth.vercel.app)
+- Voice-driven wake interaction (not just alarm sounds)
+- Personality-based messaging system
+- Escalation logic if delayed or incorrect
+- Interaction lock requiring explicit compliance
+- Deterministic session start via query parameters
+- Lightweight, PWA-style fullscreen interface
 
 ---
 
-## 🧩 Tech Stack
+## 🌐 Live App
 
-### Frontend (Authority Interface)
+[https://sloth.vercel.app](https://sloth.vercel.app)
 
-* React + Vite
-* Web Audio API
-* Web Camera API
-* PWA-style fullscreen experience
+---
 
-### Backend (Brain)
+## 🧩 Architecture Overview
 
-* Python 3.11
-* FastAPI
-* Pydantic
-* APScheduler (session logic)
-* SQLite (upgradeable)
+SLOTH uses a hybrid structure:
+
+**1️⃣ Trigger Layer (Automation)**  
+Android automation tools (MacroDroid or Automate) launch SLOTH during the wake window. This separates system-level scheduling from enforcement logic.
+
+**2️⃣ Authority Layer (Web + Backend)**  
+Once launched:
+
+- Frontend manages interaction state
+- Backend validates session flow
+- Voice synthesis delivers escalating prompts
+- Session remains active until compliance is confirmed
+
+This separation keeps the system deterministic and modular.
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+
+- React
+- Vite
+- Web Audio API
+- PWA-style fullscreen behavior
+
+### Backend
+
+- Python 3.11
+- FastAPI
+- Pydantic
+- SQLite (upgradeable)
 
 ### Voice
 
-* Coqui XTTS (free, local, expressive)
-* Tune: `SLOTH_TTS_SPEAKER` env var. 
-
-### Android Automation (Tasker)
-
-* **Trigger**: Event → Alarm dismissed (Clock app).
-* **Task**:
-  1. Wi-Fi → On (if needed).
-  2. Launch App / Browser → open URL:  
-`https://sloth.vercel.app/?autostart=1&alarm_time=HH:mm`
-     (Replace `HH:mm` with your desired time, e.g. `07:30`.)
-  3. Keep screen on: use Tasker’s “Stay On” or a custom scene that holds wake lock until SLOTH releases.
-
-**Simulate on desktop**: Open  
-`http://localhost:5173/?autostart=1&alarm_time=07:30`  
-to start a session without an alarm. Add `&delay_sec=0` to skip the countdown.
+- Coqui XTTS — speaker configurable via `SLOTH_TTS_SPEAKER`
+- Local TTS keeps latency low and avoids external API dependency.
 
 ---
 
-## 📁 Repository Structure
+## 🤖 Android Automation Setup
 
-```
-sloth/
-├── backend/
-│   ├── app/
-│   │   ├── main.py           # Session start, validate, nudge, proof, routine/next, transcribe
-│   │   ├── core/             # constants, db, personality, session_store
-│   │   ├── models/           # session.py (Pydantic)
-│   │   └── services/         # message_builder, stt, tts
-│   ├── tests/
-│   └── requirements.txt
-├── frontend/
-│   ├── package.json
-│   ├── vite.config.mts
-│   ├── index.html
-│   └── src/
-│       ├── App.jsx
-│       ├── main.jsx
-│       └── styles.css
-├── docs/                     # PROJECT.md
-|
-└── README.md
-```
+SLOTH relies on external automation tools to launch at the correct time.
+
+You can use **MacroDroid** or **Automate**.
+
+### Example — Time-based trigger
+
+- **Trigger:** Day/Time at wake time
+- **Action:** Open website  
+  `https://sloth.vercel.app/?autostart=1&alarm_time=HH:mm`  
+  Optional: add `&delay_sec=0` to skip countdown.
+
+### Example — Wake window trigger (recommended)
+
+- **Trigger:** Device active within a time window (e.g. Device unlocked)
+- **Constraint:** Between e.g. 6:00–8:00 AM
+- **Action:** Open website  
+  `https://sloth.vercel.app/?autostart=1&delay_sec=0`
 
 ---
 
-## 🚀 Getting Started (Local)
+## 🧪 Local Development
 
 ### Backend
 
@@ -124,7 +130,6 @@ cd backend
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-# For male voice: brew install espeak-ng
 uvicorn app.main:app --reload --port 8001
 ```
 
@@ -136,27 +141,71 @@ npm install
 npm run dev
 ```
 
----
-
-## 🖤 Design Philosophy
-
-SLOTH is designed with one belief:
-
-> Waking up is not a discipline problem — it’s a systems problem.
-
-SLOTH builds a system that:
-
-* Wakes you
-* Keeps you awake
-* Moves you forward
+**Test locally:**  
+`http://localhost:5173/?autostart=1&alarm_time=07:30` — add `&delay_sec=0` to skip countdown.
 
 ---
 
-## ⚠️ Disclaimer
+## 📁 Repository Structure
 
-SLOTH is built for **personal use**.
-Voice customization and automation are intended only for private, non-commercial use.
+```
+sloth/
+├── backend/
+│   ├── app/
+│   │   ├── main.py              # Session start, validate, nudge, proof, routine/next, transcribe
+│   │   ├── core/
+│   │   │   ├── constants.py     # Valid phrases, typed keywords
+│   │   │   ├── db.py           # SQLite wake_history
+│   │   │   ├── personality.py  # Personality model, DEFAULT_PERSONALITY
+│   │   │   └── session_store.py # In-memory sessions, phases
+│   │   ├── models/
+│   │   │   └── session.py      # Pydantic request/response models
+│   │   └── services/
+│   │       ├── message_builder.py # Phase messages, build_message(), LISTENING_MESSAGES
+│   │       ├── stt.py          # Whisper transcribe_audio()
+│   │       └── tts.py          # Coqui synthesize_tts()
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   └── tests/
+│       ├── conftest.py         # Mocks TTS/DB, TestClient
+│       └── test_api.py         # Session start, validate, nudge API tests
+├── frontend/
+│   ├── public/
+│   │   └── manifest.webmanifest
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── styles.css
+│   ├── index.html
+│   ├── vite.config.mts
+│   └── package.json
+├── .github/
+│   └── workflows/
+│       └── ci.yml              # Backend pytest, frontend build
+├── docs/
+│   └── PROJECT.md              # Architecture, API reference
+|
+├── README.md
+```
 
 ---
 
-**SLOTH doesn’t ring. It insists.**
+## 🎯 Design Principles
+
+- Use native system reliability for scheduling.
+- Separate triggering from enforcement.
+- Replace motivation with state-based logic.
+- Escalate interaction based on delay.
+- Keep dependencies minimal and controllable.
+
+SLOTH is an experiment in behavioral systems engineering — using automation and AI interaction to eliminate decision drift.
+
+---
+
+## ⚠️ Scope
+
+SLOTH is built for personal use and experimentation. Voice synthesis and automation integrations are intended for private, non-commercial purposes.
+
+---
+
+**SLOTH doesn't ring. It enforces the transition from sleep to action.**
