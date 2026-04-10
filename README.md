@@ -115,8 +115,6 @@ Until both are completed, **the session does not release control.**
 * Decouples scheduling from logic
 * Ensures deterministic start
 
----
-
 ### 2️⃣ Enforcement Layer (Web System)
 
 * Frontend locks user into interaction
@@ -149,7 +147,7 @@ Until both are completed, **the session does not release control.**
 
 ---
 
-## 🤖 Automation Setup
+## 🤖 Android Automation Setup
 
 ### Time Trigger
 
@@ -207,6 +205,21 @@ http://localhost:5173/?autostart=1&alarm_time=07:30&delay_sec=0
 
 Built for personal use and experimentation.
 Voice + automation integrations are non-commercial.
+
+---
+
+## ⚠️ Third-Party Licenses
+
+This project uses open-source components such as Whisper and Coqui XTTS.
+Please refer to their respective licenses for usage terms.
+
+---
+
+## 📄 License
+
+This project is licensed under **All Rights Reserved**.
+
+You may not copy, modify, distribute, or use this software without explicit permission from the author.
 
 ---
 
